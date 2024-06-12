@@ -33,9 +33,31 @@ const getSingleRoom = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const updateSingleRoom = catchAsync(async (req: Request, res: Response) => {
+    const result = await RoomService.updateSingleRoomIntoDB(req.params.id, req.body);
+
+    res.status(200).json({
+        success: true,
+        message: 'Room updated successfully',
+        data: result
+    })
+})
+
+const deleteRoom = catchAsync(async (req: Request, res: Response) => {
+    const result = await RoomService.deleteSingleRoomFromDB(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        message: 'Room deleted successfully',
+        data: result
+    })
+})
+
 
 export const RoomController = {
     createRoom,
     getRooms,
-    getSingleRoom
+    getSingleRoom,
+    updateSingleRoom,
+    deleteRoom
 }

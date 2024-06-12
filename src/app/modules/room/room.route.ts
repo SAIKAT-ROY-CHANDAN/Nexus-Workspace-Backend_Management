@@ -18,5 +18,14 @@ router.get('/:id',
     RoomController.getSingleRoom
 )
 
+router.patch('/:id',
+    validateRequest(roomValidation.roomUpdateValidationSchema),
+    RoomController.updateSingleRoom
+)
+
+router.delete('/:id',
+    RoomController.deleteRoom
+)
+
 
 export const RoomRoutes = router;

@@ -13,12 +13,35 @@ const getRoomsFromDB = async () => {
 
 const getSingleRoomFromDB = async (id: string) => {
     const result = await Room.findById(id)
-    console.log(result);
     return result
 }
+
+const updateSingleRoomIntoDB = async (id: string, payload: Partial<TRoom>) => {
+    const result = await Room.findByIdAndUpdate(
+        id,
+        payload,
+        { new: true, runValidators: true }
+    )
+
+    return result
+}
+
+const deleteSingleRoomFromDB = async (id: string) => {
+    const result = await Room.findByIdAndUpdate(
+        id,
+        { isDeleted: true },
+        { new: true }
+    )
+
+    return result
+}
+
+
 
 export const RoomService = {
     createRoomIntoDB,
     getRoomsFromDB,
-    getSingleRoomFromDB
+    getSingleRoomFromDB,
+    updateSingleRoomIntoDB,
+    deleteSingleRoomFromDB
 }
