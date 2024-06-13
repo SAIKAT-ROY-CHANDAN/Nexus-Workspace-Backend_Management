@@ -36,7 +36,7 @@ const loginUserIntoDB = async (payload: Partial<TUser>) => {
     }
     console.log(jwtPayload);
 
-    const token = createToken(jwtPayload, config.jwt_access_token as string)
+    const token = createToken(jwtPayload, config.jwt_access_secret as string)
 
     return { user, token }
 }
