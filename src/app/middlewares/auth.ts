@@ -11,7 +11,15 @@ const auth = (...requiredRoles: TUserRole[]) => {
     return catchAsync(
         async (req: Request, res: Response, next: NextFunction) => {
 
-            const token = req.headers.authorization
+            const authHeader = req.headers.authorization;
+
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                throw new AppError(
+                    httpStatus.UNAUTHORIZED, 'You are not authorized'
+                );
+            }
+
+            const token = authHeader.split(' ')[1];
 
             if (!token) {
                 throw new AppError(
