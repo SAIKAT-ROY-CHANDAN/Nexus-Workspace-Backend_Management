@@ -19,15 +19,12 @@ const loginUser = catchAsync(
         const result = await AuthService.loginUserIntoDB(req.body)
         const { user, token } = result
 
-        res.cookie('token', token, {httpOnly: true});
+        res.cookie('token', token, { httpOnly: true });
 
         res.status(200).json({
             success: true,
             message: 'User Logged in successfully',
-            data: {
-                token,
-                user
-            }
+            data: user
         })
     }
 )
