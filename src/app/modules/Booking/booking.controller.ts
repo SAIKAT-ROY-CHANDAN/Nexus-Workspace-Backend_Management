@@ -34,7 +34,7 @@ const getUserAllBookings = catchAsync(
 
         res.status(200).json({
             success: true,
-            message: 'All bookings retrieved successfully',
+            message: 'User bookings retrieved successfully',
             data: result
         })
     }

@@ -69,9 +69,9 @@ const getUserBookingsFromDB = async (payload: any) => {
     ) as JwtPayload
 
     const { userId } = decoded
-    console.log(decoded, "decoded yet?");
+    console.log(decoded);
 
-    const result = await Booking.findById(userId)
+    const result = await Booking.find({ 'user._id': userId }).select('-user');
     return result
 }
 

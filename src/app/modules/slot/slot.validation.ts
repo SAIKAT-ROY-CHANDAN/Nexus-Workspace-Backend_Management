@@ -13,7 +13,7 @@ const timeSchema = z.string().refine(
 const slotValidationSchema = z.object({
     body: z.object({
         room: z.string(),
-        date: z.string().date(),
+        date: z.string(),
         startTime: timeSchema,
         endTime: timeSchema
     })
@@ -22,7 +22,7 @@ const slotValidationSchema = z.object({
 const UpdateSlotValidationSchema = z.object({
     body: z.object({
         room: z.string().optional(),
-        date: z.string().date().optional(),
+        date: z.string().optional(),
         startTime: timeSchema.optional(),
         endTime: timeSchema.optional(),
     })

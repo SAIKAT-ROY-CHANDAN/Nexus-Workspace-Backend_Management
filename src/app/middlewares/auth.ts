@@ -13,14 +13,13 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
             const authHeader = req.headers.authorization;
 
-            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            if (!authHeader) {
                 throw new AppError(
                     httpStatus.UNAUTHORIZED, 'You are not authorized'
                 );
             }
 
             const token = authHeader.split(' ')[1];
-
             if (!token) {
                 throw new AppError(
                     httpStatus.UNAUTHORIZED, 'You are not authorized'
@@ -37,7 +36,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
             // checking if the user is exist
             const user = await User.findById(userId);
-
+            
             if (!user) {
                 throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
             }
