@@ -5,8 +5,8 @@ import { Room } from "../room/room.model";
 import { User } from "../Auth/auth.model";
 import { Slot } from "../slot/slot.model";
 import { Booking } from "./booking.model";
-import config from "../../config";
-import jwt, { JwtPayload } from 'jsonwebtoken'
+// import config from "../../config";
+// import jwt, { JwtPayload } from 'jsonwebtoken'
 
 const createBookingIntoDB = async (payload: TBooking) => {
     const { date, slots, room, user } = payload
@@ -57,6 +57,7 @@ const createBookingIntoDB = async (payload: TBooking) => {
         user: userRecord,
         totalAmount
     }
+    console.log(booking);
 
     const result = await Booking.create(booking)
     return result

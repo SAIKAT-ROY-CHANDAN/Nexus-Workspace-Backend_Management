@@ -52,7 +52,9 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
         filter.room = roomId;
     }
 
+
     const result = await Slot.find(filter).populate('room')
+
     return result
 }
 
