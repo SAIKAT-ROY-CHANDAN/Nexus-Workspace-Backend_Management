@@ -27,18 +27,18 @@ const getAdminAllBookings = catchAsync(
 )
 
 
-const getUserAllBookings = catchAsync(
-    async (req: Request, res: Response) => {
-        const token = req.headers.authorization
-        const result = await BookingService.getUserBookingsFromDB(token)
+// const getUserAllBookings = catchAsync(
+//     async (req: Request, res: Response) => {
+//         const token = req.headers.authorization
+//         const result = await BookingService.getUserBookingsFromDB(token)
 
-        res.status(200).json({
-            success: true,
-            message: 'User bookings retrieved successfully',
-            data: result
-        })
-    }
-)
+//         res.status(200).json({
+//             success: true,
+//             message: 'User bookings retrieved successfully',
+//             data: result
+//         })
+//     }
+// )
 
 const updateBooking = catchAsync(
     async (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ const deleteBooking = catchAsync(async (req: Request, res: Response) => {
 export const BookingController = {
     createBooking,
     getAdminAllBookings,
-    getUserAllBookings,
+    // getUserAllBookings,
     updateBooking,
     deleteBooking
 }

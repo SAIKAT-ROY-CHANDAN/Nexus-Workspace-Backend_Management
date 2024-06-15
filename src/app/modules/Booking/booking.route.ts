@@ -22,10 +22,10 @@ router.patch('/:id',
     BookingController.updateBooking
 )
 
-router.get('/my-bookings',
-    auth('user'),
-    BookingController.getUserAllBookings
-)
+// router.get('/my-bookings',
+//     auth('user'),
+//     BookingController.getUserAllBookings
+// )
 
 router.delete('/:id',
     auth('admin'),

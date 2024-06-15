@@ -2,13 +2,11 @@ import { TErrorSource, TGenericResponse } from "../interface/error"
 
 
 const handleDuplicateError = (err: any): TGenericResponse => {
-    const match = err.message.match(/"([^"]*)"/)
-
-    const extractedMessage = match && match[1]
-
+    console.log(err);
     const errorSources: TErrorSource = [
-        {path: '',
-         message: `${extractedMessage} is already exists`
+        {
+            path: '',
+            message: err.message
         }
     ]
 
@@ -16,7 +14,7 @@ const handleDuplicateError = (err: any): TGenericResponse => {
 
     return {
         statusCode,
-        message: 'Validation Error',
+        message: err.message,
         errorSources,
     }
 

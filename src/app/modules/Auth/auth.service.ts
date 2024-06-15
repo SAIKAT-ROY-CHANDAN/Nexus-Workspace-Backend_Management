@@ -18,23 +18,23 @@ const loginUserIntoDB = async (payload: Partial<TUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, 'Email and password are required');
     }
 
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).select('+password')
 
     if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, 'User is not found')
     }
-
+    
     const isPasswordCorrect = await bcrypt.compare(password as string, user.password);
 
     if (!isPasswordCorrect) {
         throw new AppError(httpStatus.FORBIDDEN, 'Your Password is Incorrect')
     }
+ 
 
     const jwtPayload = {
         userId: user._id.toString(),
         role: user.role
     }
-
     const token = createToken(jwtPayload, config.jwt_access_secret as string)
 
     return { user, token }
