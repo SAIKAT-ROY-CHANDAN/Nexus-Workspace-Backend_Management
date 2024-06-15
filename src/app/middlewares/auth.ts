@@ -15,14 +15,14 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
             if (!authHeader) {
                 throw new AppError(
-                    httpStatus.UNAUTHORIZED, 'You are not authorized'
+                    httpStatus.UNAUTHORIZED, 'You have no access to this route'
                 );
             }
 
             const token = authHeader.split(' ')[1];
             if (!token) {
                 throw new AppError(
-                    httpStatus.UNAUTHORIZED, 'You are not authorized'
+                    httpStatus.UNAUTHORIZED, 'You have no access to this route'
                 )
             }
 

@@ -31,10 +31,21 @@ const createBookingIntoDB = async (payload: TBooking) => {
         throw new AppError(httpStatus.NOT_FOUND, "Room not found in database");
     }
 
-    const slotRecords = await Slot.find({ _id: { $in: slots } });
+    // const slotRecords = await Slot.find({ _id: { $in: slots } });
 
+    // if (slotRecords.length !== slots.length) {
+    //     throw new AppError(httpStatus.NOT_FOUND, "One or more slots not found in database");
+    // }
+
+    const slotRecords = await Slot.find({ _id: { $in: slots } });
     if (slotRecords.length !== slots.length) {
-        throw new AppError(httpStatus.NOT_FOUND, "One or more slots not found in database");
+        throw new AppError(httpStatus.NOT_FOUND, "Slots not found in the database");
+    }
+
+
+    const invalidSlots = slotRecords.filter(slot => !slot.room.equals(room));
+    if (invalidSlots.length > 0) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Slots do not belong to this specified room");
     }
 
     const totalAmount = roomRecord.pricePerSlot * slotRecords.length
@@ -73,19 +84,19 @@ const getUserBookingsFromDB = async (payload: any) => {
 
 
 const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) => {
- 
+
     const result = await Booking.findByIdAndUpdate(id, payload, { new: true });
 
-    if(!result){
+    if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
     }
 
     const transformedResult = {
         _id: result._id.toString(),
-        date: new Date(result.date).toISOString().split('T')[0], 
-        slots: result.slots.map(slot => slot._id.toString()), 
+        date: new Date(result.date).toISOString().split('T')[0],
+        slots: result.slots.map(slot => slot._id.toString()),
         totalAmount: result.totalAmount,
-        room: result.room._id.toString(), 
+        room: result.room._id.toString(),
         user: result.user._id.toString(),
         isConfirmed: result.isConfirmed,
         isDeleted: result.isDeleted
@@ -103,16 +114,16 @@ const deleteBookingFromDB = async (id: string) => {
         { new: true }
     )
 
-    if(!result){
+    if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
     }
 
     const transformedResult = {
         _id: result._id.toString(),
-        date: new Date(result.date).toISOString().split('T')[0], 
-        slots: result.slots.map(slot => slot._id.toString()), 
+        date: new Date(result.date).toISOString().split('T')[0],
+        slots: result.slots.map(slot => slot._id.toString()),
         totalAmount: result.totalAmount,
-        room: result.room._id.toString(), 
+        room: result.room._id.toString(),
         user: result.user._id.toString(),
         isConfirmed: result.isConfirmed,
         isDeleted: result.isDeleted

@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import AppError from "../../errors/AppError";
 import { TRoom } from "./room.interface";
 import { Room } from "./room.model";
 
@@ -8,11 +10,21 @@ const createRoomIntoDB = async (payload: TRoom) => {
 
 const getRoomsFromDB = async () => {
     const result = await Room.find()
+
+    if (result.length === 0) {
+        throw new AppError(httpStatus.NOT_FOUND, "No Data Found")
+    }
+
     return result
 }
 
 const getSingleRoomFromDB = async (id: string) => {
     const result = await Room.findById(id)
+
+    if (!result) {
+        throw new AppError(httpStatus.NOT_FOUND, "No Data Found")
+    }
+
     return result
 }
 
