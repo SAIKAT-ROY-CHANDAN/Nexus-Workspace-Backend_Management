@@ -1,6 +1,8 @@
 # Backend Management System for Nexus Co-Working Space Reservations
 *This project is a backend management system designed for an agency that offers co-working spaces for meetings and discussions. The system streamlines the booking process by providing a web application for managing room reservations. The backend is built using Node.js, Express, MongoDB, and other supporting libraries.*
 
+#### Live Link - https://nexus-workspace.vercel.app/
+
 ### Features
 
 - User authentication and authorization
