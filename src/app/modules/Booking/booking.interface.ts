@@ -1,7 +1,7 @@
 import { Types } from "mongoose"
 
 export type TBooking = {
-    date: Date,
+    date: string,
     slots: Types.ObjectId[],
     room: Types.ObjectId,
     user: Types.ObjectId,

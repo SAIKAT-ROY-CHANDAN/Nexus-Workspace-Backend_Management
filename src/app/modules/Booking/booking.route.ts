@@ -13,7 +13,13 @@ router.post('/',
 )
 
 router.get('/',
+    auth('admin'),
     BookingController.getAdminAllBookings
+)
+
+router.patch('/:id',
+    auth('admin'),
+    BookingController.updateBooking
 )
 
 router.get('/my-bookings',

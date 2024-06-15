@@ -47,7 +47,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
         totalAmount
     }
 
-    console.log(booking);
     const result = await Booking.create(booking)
     return result
 }
@@ -61,22 +60,28 @@ const getAdminAllBookingsFromDB = async () => {
 const getUserBookingsFromDB = async (payload: any) => {
     const token = payload.split(' ')[1];
 
-    console.log(token);
-
     const decoded = jwt.verify(
         token,
         config.jwt_access_secret as string
     ) as JwtPayload
 
     const { userId } = decoded
-    console.log(decoded);
 
     const result = await Booking.find({ 'user._id': userId }).select('-user');
+    return result
+}
+
+
+const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) => {
+    console.log(id);
+    const result = await Booking.findByIdAndUpdate(id, payload, { new: true });
+
     return result
 }
 
 export const BookingService = {
     createBookingIntoDB,
     getAdminAllBookingsFromDB,
-    getUserBookingsFromDB
+    getUserBookingsFromDB,
+    adminUpdateBookingFromDB
 }

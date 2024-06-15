@@ -38,7 +38,7 @@ const userSchema = new Schema({
 
 // Main Booking Schema
 const bookingSchema = new Schema({
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     slots: { type: [slotSchema], required: true },
     room: { type: roomSchema, required: true },
     user: { type: userSchema, required: true },
