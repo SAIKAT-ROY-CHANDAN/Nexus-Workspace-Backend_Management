@@ -27,4 +27,9 @@ router.get('/my-bookings',
     BookingController.getUserAllBookings
 )
 
+router.delete('/:id',
+    auth('admin'),
+    BookingController.deleteBooking
+)
+
 export const BookingRoutes = router

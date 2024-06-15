@@ -6,5 +6,6 @@ export type TBooking = {
     room: Types.ObjectId,
     user: Types.ObjectId,
     isConfirmed: string,
-    isDeleted: Boolean
+    isDeleted: Boolean,
+    totalAmount?: number
 }

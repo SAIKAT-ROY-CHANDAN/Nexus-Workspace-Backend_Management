@@ -73,15 +73,61 @@ const getUserBookingsFromDB = async (payload: any) => {
 
 
 const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) => {
-    console.log(id);
+ 
     const result = await Booking.findByIdAndUpdate(id, payload, { new: true });
 
-    return result
+    if(!result){
+        throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
+    }
+
+    const transformedResult = {
+        _id: result._id.toString(),
+        date: new Date(result.date).toISOString().split('T')[0], 
+        slots: result.slots.map(slot => slot._id.toString()), 
+        totalAmount: result.totalAmount,
+        room: result.room._id.toString(), 
+        user: result.user._id.toString(),
+        isConfirmed: result.isConfirmed,
+        isDeleted: result.isDeleted
+    };
+
+    console.log(transformedResult);
+
+    return transformedResult
 }
+
+const deleteBookingFromDB = async (id: string) => {
+    const result = await Booking.findByIdAndUpdate(
+        id,
+        { isDeleted: true },
+        { new: true }
+    )
+
+    if(!result){
+        throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
+    }
+
+    const transformedResult = {
+        _id: result._id.toString(),
+        date: new Date(result.date).toISOString().split('T')[0], 
+        slots: result.slots.map(slot => slot._id.toString()), 
+        totalAmount: result.totalAmount,
+        room: result.room._id.toString(), 
+        user: result.user._id.toString(),
+        isConfirmed: result.isConfirmed,
+        isDeleted: result.isDeleted
+    };
+
+    console.log(transformedResult);
+
+    return transformedResult
+}
+
 
 export const BookingService = {
     createBookingIntoDB,
     getAdminAllBookingsFromDB,
     getUserBookingsFromDB,
-    adminUpdateBookingFromDB
+    adminUpdateBookingFromDB,
+    deleteBookingFromDB
 }
