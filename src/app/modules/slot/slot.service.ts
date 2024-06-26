@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 import { TSlot } from "./slot.interface";
 import { Slot } from "./slot.model";
 import { minutesToTime, timeMinutes } from "./slot.utils";
+import { Room } from "../room/room.model";
 
 const createSlotIntoDB = async (payload: TSlot) => {
 
@@ -14,6 +15,12 @@ const createSlotIntoDB = async (payload: TSlot) => {
 
     if (totalDuration < 0) {
         throw new AppError(httpStatus.NOT_ACCEPTABLE, 'End Time must be after start time')
+    }
+
+    const roomRecord = await Room.findById(room)
+
+    if(!roomRecord){
+        throw new AppError(httpStatus.NOT_FOUND, 'Room is not found')
     }
 
     const numberOfSlots = Math.floor(totalDuration) / 60

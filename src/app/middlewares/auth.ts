@@ -36,16 +36,20 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
             // checking if the user is exist
             const user = await User.findById(userId);
-            
+
             if (!user) {
                 throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
             }
 
             if (requiredRoles && !requiredRoles.includes(role)) {
-                throw new AppError(
-                    httpStatus.UNAUTHORIZED,
-                    'You have no access to this route'
-                )
+                // throw new AppError(
+                //     httpStatus.UNAUTHORIZED,
+                //     'You have no access to this route'
+                // )
+                res.status(404).json({
+                    success: false,
+                    message: 'You have no access to this route',
+                })
             }
             next()
         }

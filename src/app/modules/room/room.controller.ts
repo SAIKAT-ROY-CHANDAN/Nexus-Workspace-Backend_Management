@@ -16,11 +16,19 @@ const createRoom = catchAsync(async (req: Request, res: Response) => {
 const getRooms = catchAsync(async (req: Request, res: Response) => {
     const result = await RoomService.getRoomsFromDB();
 
-    res.status(200).json({
-        success: true,
-        message: 'Rooms retrieved successfully',
-        data: result
-    })
+    if (result.length === 0) {
+        res.status(404).json({
+            success: false,
+            message: 'No Data Found',
+            data: result
+        })
+    } else {
+        res.status(200).json({
+            success: true,
+            message: 'Rooms retrieved successfully',
+            data: result
+        })
+    }
 })
 
 const getSingleRoom = catchAsync(async (req: Request, res: Response) => {
