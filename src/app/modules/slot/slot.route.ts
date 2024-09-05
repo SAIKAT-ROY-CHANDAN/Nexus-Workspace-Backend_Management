@@ -2,12 +2,12 @@ import express from 'express'
 import { slotController } from './slot.controller'
 import validateRequest from '../../middlewares/validateRequest'
 import { slotValidation } from './slot.validation'
-import auth from '../../middlewares/auth'
+// import auth from '../../middlewares/auth'
 
 const router = express.Router()
 
 router.post('/',
-    auth('admin'),
+    // auth('admin'),
     validateRequest(slotValidation.slotValidationSchema),
     slotController.createSlot
 )

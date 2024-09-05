@@ -19,7 +19,7 @@ const createSlotIntoDB = async (payload: TSlot) => {
 
     const roomRecord = await Room.findById(room)
 
-    if(!roomRecord){
+    if (!roomRecord) {
         throw new AppError(httpStatus.NOT_FOUND, 'Room is not found')
     }
 
@@ -48,7 +48,8 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
 
     const { date, roomId } = query
 
-    const filter: Record<string, unknown> = { isBooked: false };
+    const filter: Record<string, unknown> = { };
+    // const filter: Record<string, unknown> = { isBooked: false };
 
 
     if (date) {
@@ -61,7 +62,7 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
 
 
     const result = await Slot.find(filter).populate('room')
-
+    console.log(result);
     return result
 }
 

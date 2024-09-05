@@ -10,7 +10,6 @@ import { User } from '../modules/Auth/auth.model';
 const auth = (...requiredRoles: TUserRole[]) => {
     return catchAsync(
         async (req: Request, res: Response, next: NextFunction) => {
-
             const authHeader = req.headers.authorization;
 
             if (!authHeader) {

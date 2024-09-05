@@ -1,7 +1,5 @@
 import { Schema, model } from "mongoose";
 import { TBooking } from "./booking.interface";
-import { optional } from "zod";
-
 
 
 const slotSchema = new Schema({

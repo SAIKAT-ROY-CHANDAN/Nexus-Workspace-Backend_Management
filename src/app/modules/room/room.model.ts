@@ -7,6 +7,7 @@ export const roomSchema = new Schema<TRoom>({
     floorNo: { type: Number, required: true },
     capacity: { type: Number, required: true },
     pricePerSlot: { type: Number, required: true },
+    image: { type: [String] },
     amenities: { type: [String], required: true },
     isDeleted: { type: Boolean, default: false }
 })

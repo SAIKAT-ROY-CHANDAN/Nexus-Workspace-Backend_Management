@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Schema, model } from "mongoose";
 import { TUser } from "./auth.interface";
 import bcrypt from 'bcrypt'
@@ -7,13 +9,13 @@ export const userSchema = new Schema<TUser>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    phone: { type: String, required: true },
+    phone: { type: String },
     role: {
         type: String,
         enum: ['admin', 'user'],
         message: '{VALUE} is not a valid user'
     },
-    address: { type: String, required: true },
+    address: { type: String },
 }, {
     toJSON: {
         transform(doc, ret) {

@@ -8,7 +8,8 @@ const roomValidationSchema = z.object({
         capacity: z.number().int().min(1, { message: 'Capacity must be at least 1' }),
         pricePerSlot: z.number().min(0, { message: 'Price per slot cannot be negative' }),
         amenities: z.array(z.string()),
-        isDeleted: z.boolean().optional().default(false)
+        image: z.array(z.string()).optional(),
+        isDeleted: z.boolean().optional().default(false).optional()
     })
 });
 
@@ -20,6 +21,7 @@ const roomUpdateValidationSchema = z.object({
         capacity: z.number().int().min(1).optional(),
         pricePerSlot: z.number().min(0).optional(),
         amenities: z.array(z.string()).optional(),
+        image: z.array(z.string()).optional(),
         isDeleted: z.boolean().optional().default(false).optional(),
     })
 });
