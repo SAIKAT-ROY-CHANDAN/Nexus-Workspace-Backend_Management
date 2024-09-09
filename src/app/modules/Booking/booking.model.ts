@@ -45,6 +45,6 @@ const bookingSchema = new Schema({
     isConfirmed: { type: String, default: "unconfirmed" },
     isDeleted: { type: Boolean, default: false },
     __v: { type: Number }
-});
+}, { timestamps: true });
 
 export const Booking = model<TBooking>('Booking', bookingSchema)

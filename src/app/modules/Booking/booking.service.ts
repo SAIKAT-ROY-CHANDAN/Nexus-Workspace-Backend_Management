@@ -5,8 +5,7 @@ import { Room } from "../room/room.model";
 import { User } from "../Auth/auth.model";
 import { Slot } from "../slot/slot.model";
 import { Booking } from "./booking.model";
-// import config from "../../config";
-// import jwt, { JwtPayload } from 'jsonwebtoken'
+import { initiatePayment } from "../payment/payment.utils";
 
 const createBookingIntoDB = async (payload: TBooking) => {
     const { date, slots, room, user } = payload
@@ -57,9 +56,12 @@ const createBookingIntoDB = async (payload: TBooking) => {
         user: userRecord,
         totalAmount
     }
-    console.log(booking);
+    // console.log(booking);
 
     const result = await Booking.create(booking)
+
+    const paymentSession = await initiatePayment()
+    console.log(paymentSession);
     return result
 }
 
@@ -103,7 +105,7 @@ const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) 
         isDeleted: result.isDeleted
     };
 
-    console.log(transformedResult);
+    // console.log(transformedResult);
 
     return transformedResult
 }
@@ -130,7 +132,7 @@ const deleteBookingFromDB = async (id: string) => {
         isDeleted: result.isDeleted
     };
 
-    console.log(transformedResult);
+    // console.log(transformedResult);
 
     return transformedResult
 }

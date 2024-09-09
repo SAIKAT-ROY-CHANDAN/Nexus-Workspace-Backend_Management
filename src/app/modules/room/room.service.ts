@@ -9,7 +9,8 @@ const createRoomIntoDB = async (payload: TRoom) => {
 }
 
 const getRoomsFromDB = async () => {
-    const result = await Room.find()
+    const result = await Room.find({ isDeleted: false });
+    // const result = await Room.find()
 
     if (result.length === 0) {
         throw new AppError(httpStatus.NOT_FOUND, "No Data Found")
@@ -19,7 +20,8 @@ const getRoomsFromDB = async () => {
 }
 
 const getSingleRoomFromDB = async (id: string) => {
-    const result = await Room.findById(id)
+    const result = await Room.findOne({ _id: id, isDeleted: false }); 
+    // const result = await Room.findById(id)
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "No Data Found")
