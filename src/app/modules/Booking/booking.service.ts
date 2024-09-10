@@ -48,21 +48,24 @@ const createBookingIntoDB = async (payload: TBooking) => {
     }
 
     const totalAmount = roomRecord.pricePerSlot * slotRecords.length
+    const transactionId = `TXN-${Date.now()}`;
 
     const booking = {
+        transactionId,
         date,
         slots: slotRecords,
         room: roomRecord,
         user: userRecord,
         totalAmount
     }
+
     // console.log(booking);
 
-    const result = await Booking.create(booking)
+    await Booking.create(booking)
 
-    const paymentSession = await initiatePayment()
+    const paymentSession = await initiatePayment(booking)
     console.log(paymentSession);
-    return result
+    return paymentSession
 }
 
 const getAdminAllBookingsFromDB = async () => {
