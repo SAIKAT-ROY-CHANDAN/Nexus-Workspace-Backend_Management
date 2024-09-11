@@ -140,11 +140,33 @@ const deleteBookingFromDB = async (id: string) => {
     return transformedResult
 }
 
+const confirmBookingAndRejectBookingStatusIntoDB = async (id: string, status: string) => {
+    const validStatuses = ["confirmed", "unconfirmed"];
+    if (!validStatuses.includes(status)) {
+        return { success: false, message: "Invalid status. Must be 'confirmed' or 'unconfirmed'" };
+    }
+
+    // Update the booking status
+    const booking = await Booking.findByIdAndUpdate(
+        id,
+        { isConfirmed: status },
+        { new: true, runValidators: true }
+    );
+
+    if (!booking) {
+        return { success: false, message: "Booking not found" };
+    }
+
+    return { success: true, message: `Booking ${status} successfully`, booking };
+
+}
+
 
 export const BookingService = {
     createBookingIntoDB,
     getAdminAllBookingsFromDB,
     // getUserBookingsFromDB,
     adminUpdateBookingFromDB,
-    deleteBookingFromDB
+    deleteBookingFromDB,
+    confirmBookingAndRejectBookingStatusIntoDB
 }

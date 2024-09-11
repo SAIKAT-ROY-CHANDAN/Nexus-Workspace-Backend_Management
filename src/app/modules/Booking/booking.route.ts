@@ -22,6 +22,11 @@ router.patch('/:id',
     BookingController.updateBooking
 )
 
+router.patch('/status/:id',
+    auth('admin'),
+    BookingController.confirmBookingAndRejectBookingStatus
+)
+
 // router.get('/my-bookings',
 //     auth('user'),
 //     BookingController.getUserAllBookings
