@@ -48,9 +48,11 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
 
     const { date, roomId } = query
 
-    const filter: Record<string, unknown> = { };
-    // const filter: Record<string, unknown> = { isBooked: false };
-
+    // const filter: Record<string, unknown> = {};
+    const filter: Record<string, unknown> = {
+        isBooked: false,
+        isDeleted: false
+    };
 
     if (date) {
         filter.date = date;
@@ -62,11 +64,79 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
 
 
     const result = await Slot.find(filter).populate('room')
-    // console.log(result);
     return result
 }
 
+const updateSlotsFromDB = async (id: string, updateData: Partial<TSlot>) => {
+
+    const existingSlot = await Slot.findById(id);
+    if (!existingSlot) {
+        throw new Error("Slot not found.");
+    }
+
+    if (existingSlot.isBooked) {
+        throw new Error("Cannot update a booked slot.");
+    }
+
+    if (updateData.startTime && updateData.endTime) {
+        const { startTime, endTime } = updateData;
+
+        const conflictingSlots = await Slot.find({
+            room: existingSlot.room,
+            date: existingSlot.date,
+            _id: { $ne: id },
+            $or: [
+                {
+                    startTime: { $lt: endTime, $gte: startTime }
+                },
+                {
+                    endTime: { $gt: startTime, $lte: endTime }
+                },
+                {
+                    startTime: { $lte: startTime },
+                    endTime: { $gte: endTime }
+                }
+            ]
+        });
+
+        if (conflictingSlots.length > 0) {
+            throw new Error("Time conflict with another slot.");
+        }
+    }
+
+    const updatedSlot = await Slot.findOneAndUpdate(
+        { _id: id },
+        { startTime: updateData.startTime, endTime: updateData.endTime },
+        { new: true }
+    );
+    console.log(updatedSlot);
+
+    return updatedSlot;
+}
+
+const deleteSlotFromDB = async (id: string) => {
+    const existingSlot = await Slot.findById(id);
+
+    if (!existingSlot) {
+        throw new Error("Slot not found.");
+    }
+
+    if (existingSlot.isDeleted) {
+        throw new Error("Slot is already deleted.");
+    }
+
+    const updatedSlot = await Slot.findByIdAndUpdate(
+        id,
+        { isDeleted: true },
+        { new: true }
+    );
+
+    return updatedSlot;
+};
+
 export const slotService = {
     createSlotIntoDB,
-    getAvailableAllSlotsFromDB
+    getAvailableAllSlotsFromDB,
+    updateSlotsFromDB,
+    deleteSlotFromDB
 }

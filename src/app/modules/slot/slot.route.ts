@@ -16,4 +16,13 @@ router.get('/availability',
     slotController.getAvailableAllSlots
 )
 
+router.patch('/:id',
+    validateRequest(slotValidation.UpdateSlotValidationSchema),
+    slotController.updatedSlots
+)
+
+router.delete('/:id',
+    slotController.deleteSlot
+)
+
 export const SlotRoutes = router
