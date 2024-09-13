@@ -109,8 +109,6 @@ const updateSlotsFromDB = async (id: string, updateData: Partial<TSlot>) => {
         { startTime: updateData.startTime, endTime: updateData.endTime },
         { new: true }
     );
-    console.log(updatedSlot);
-
     return updatedSlot;
 }
 

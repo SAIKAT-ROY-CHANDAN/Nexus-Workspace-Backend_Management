@@ -36,10 +36,6 @@ const getRoomsFromDB = async (queryParams: any) => {
         sortQuery.pricePerSlot = -1;
     }
 
-
-    console.log('Query Object:', query);
-    console.log('Sort Object:', sortQuery)
-
     const result = await Room.find(query).sort(sortQuery);
 
     if (result.length === 0) {
@@ -61,7 +57,6 @@ const getRoomsFromDB = async (queryParams: any) => {
 
 const getSingleRoomFromDB = async (id: string) => {
     const result = await Room.findOne({ _id: id, isDeleted: false });
-    // const result = await Room.findById(id)
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "No Data Found")
