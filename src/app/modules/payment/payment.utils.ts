@@ -6,7 +6,6 @@ dotenv.config();
 
 export const initiatePayment = async (booking: any) => {
 
-
     const response = await axios.post(process.env.PAYMENT_URL!, {
         store_id: process.env.STORE_ID,
         signature_key: process.env.SIGNATURE_KEY,
@@ -29,7 +28,6 @@ export const initiatePayment = async (booking: any) => {
         type: "json"
     })
 
-    console.log(response);
     return response.data
 };
 

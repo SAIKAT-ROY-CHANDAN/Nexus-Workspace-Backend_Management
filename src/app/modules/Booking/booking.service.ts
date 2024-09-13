@@ -30,12 +30,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
         throw new AppError(httpStatus.NOT_FOUND, "Room not found in database");
     }
 
-    // const slotRecords = await Slot.find({ _id: { $in: slots } });
-
-    // if (slotRecords.length !== slots.length) {
-    //     throw new AppError(httpStatus.NOT_FOUND, "One or more slots not found in database");
-    // }
-
     const slotRecords = await Slot.find({ _id: { $in: slots } });
     if (slotRecords.length !== slots.length) {
         throw new AppError(httpStatus.NOT_FOUND, "Slots not found in the database");
@@ -46,6 +40,10 @@ const createBookingIntoDB = async (payload: TBooking) => {
     if (invalidSlots.length > 0) {
         throw new AppError(httpStatus.BAD_REQUEST, "Slots do not belong to this specified room");
     }
+
+    slotRecords.forEach(slot => {
+        slot.isBooked = true;
+    });
 
     const totalAmount = roomRecord.pricePerSlot * slotRecords.length
     const transactionId = `TXN-${Date.now()}`;
@@ -59,44 +57,38 @@ const createBookingIntoDB = async (payload: TBooking) => {
         totalAmount
     }
 
-    // console.log(booking);
-
     await Booking.create(booking)
+
+    for (const slot of slotRecords) {
+        await Slot.findByIdAndUpdate(slot._id, { isBooked: true });
+    }
 
     const paymentSession = await initiatePayment(booking)
     console.log(paymentSession);
     return paymentSession
 }
 
+
 const getAdminAllBookingsFromDB = async () => {
-    const result = await Booking.find()
-    return result
-}
+    const result = await Booking.find({ isDeleted: { $ne: true } });
+    return result;
+};
 
 
-// const getUserBookingsFromDB = async (payload: any) => {
-//     const token = payload.split(' ')[1];
-
-//     const decoded = jwt.verify(
-//         token,
-//         config.jwt_access_secret as string
-//     ) as JwtPayload
-
-//     const { userId } = decoded
-
-//     const result = await Booking.find({ 'user._id': userId }).select('-user');
+// const getAdminAllBookingsFromDB = async () => {
+//     const result = await Booking.find()
 //     return result
 // }
 
 
 const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) => {
-
+    
     const result = await Booking.findByIdAndUpdate(id, payload, { new: true });
-
+    
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
     }
-
+    
     const transformedResult = {
         _id: result._id.toString(),
         date: new Date(result.date).toISOString().split('T')[0],
@@ -107,9 +99,9 @@ const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) 
         isConfirmed: result.isConfirmed,
         isDeleted: result.isDeleted
     };
-
+    
     // console.log(transformedResult);
-
+    
     return transformedResult
 }
 
@@ -119,11 +111,11 @@ const deleteBookingFromDB = async (id: string) => {
         { isDeleted: true },
         { new: true }
     )
-
+    
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, "Booking not Found")
     }
-
+    
     const transformedResult = {
         _id: result._id.toString(),
         date: new Date(result.date).toISOString().split('T')[0],
@@ -134,9 +126,9 @@ const deleteBookingFromDB = async (id: string) => {
         isConfirmed: result.isConfirmed,
         isDeleted: result.isDeleted
     };
-
+    
     // console.log(transformedResult);
-
+    
     return transformedResult
 }
 
@@ -145,20 +137,20 @@ const confirmBookingAndRejectBookingStatusIntoDB = async (id: string, status: st
     if (!validStatuses.includes(status)) {
         return { success: false, message: "Invalid status. Must be 'confirmed' or 'unconfirmed'" };
     }
-
+    
     // Update the booking status
     const booking = await Booking.findByIdAndUpdate(
         id,
         { isConfirmed: status },
         { new: true, runValidators: true }
     );
-
+    
     if (!booking) {
         return { success: false, message: "Booking not found" };
     }
-
+    
     return { success: true, message: `Booking ${status} successfully`, booking };
-
+    
 }
 
 
@@ -170,3 +162,19 @@ export const BookingService = {
     deleteBookingFromDB,
     confirmBookingAndRejectBookingStatusIntoDB
 }
+
+
+
+    // const getUserBookingsFromDB = async (payload: any) => {
+    //     const token = payload.split(' ')[1];
+    
+    //     const decoded = jwt.verify(
+    //         token,
+    //         config.jwt_access_secret as string
+    //     ) as JwtPayload
+    
+    //     const { userId } = decoded
+    
+    //     const result = await Booking.find({ 'user._id': userId }).select('-user');
+    //     return result
+    // }
