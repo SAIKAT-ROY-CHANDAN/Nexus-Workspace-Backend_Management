@@ -13,6 +13,9 @@ const createSlotIntoDB = async (payload: TSlot) => {
     const endMinutes = timeMinutes(endTime)
     const totalDuration = endMinutes - startMinutes
 
+    console.log(`Creating slots for room: ${room}, date: ${date}, startTime: ${startTime}, endTime: ${endTime}`);
+    console.log(`Start Minutes: ${startMinutes}, End Minutes: ${endMinutes}, Total Duration: ${totalDuration}`);
+
     if (totalDuration < 0) {
         throw new AppError(httpStatus.NOT_ACCEPTABLE, 'End Time must be after start time')
     }
@@ -22,6 +25,20 @@ const createSlotIntoDB = async (payload: TSlot) => {
     if (!roomRecord) {
         throw new AppError(httpStatus.NOT_FOUND, 'Room is not found')
     }
+
+    // Check for existing slots that overlap with the given time range
+    const overlappingSlots = await Slot.find({
+        room,
+        date,
+        $or: [
+            { startTime: { $lt: endTime }, endTime: { $gt: startTime } },
+        ],
+    });
+
+    if (overlappingSlots.length > 0) {
+        throw new AppError(httpStatus.CONFLICT, 'A slot already exists for this time range');
+    }
+
 
     const numberOfSlots = Math.floor(totalDuration) / 60
 
@@ -48,7 +65,6 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
 
     const { date, roomId } = query
 
-    // const filter: Record<string, unknown> = {};
     const filter: Record<string, unknown> = {
         isBooked: false,
         isDeleted: false
@@ -61,7 +77,6 @@ const getAvailableAllSlotsFromDB = async (query: Record<string, unknown>) => {
     if (roomId) {
         filter.room = roomId;
     }
-
 
     const result = await Slot.find(filter).populate('room')
     return result
