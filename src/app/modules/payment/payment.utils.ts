@@ -4,22 +4,21 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const initiatePayment = async (booking: any) => {
-
+export const initiatePayment = async (booking: any, user: any, transactionId: any, totalAmount: any) => {
     const response = await axios.post(process.env.PAYMENT_URL!, {
         store_id: process.env.STORE_ID,
         signature_key: process.env.SIGNATURE_KEY,
-        tran_id: booking.transactionId,
+        tran_id: transactionId,
         success_url: "http://www.merchantdomain.com/sucesspage.html",
         fail_url: "http://www.merchantdomain.com/failedpage.html",
         cancel_url: "http://www.merchantdomain.com/cancellpage.html",
-        amount: "10.0",
+        amount: totalAmount,
         currency: "BDT",
         desc: "Merchant Registration Payment",
-        cus_name: booking.user.name,
-        cus_email: booking.user.email,
-        cus_add1: booking.user.address,
-        cus_phone: booking.user.phone,
+        cus_name: user.name,
+        cus_email: user.email,
+        cus_add1: user.address,
+        cus_phone: user.phone,
         cus_add2: "Mohakhali DOHS",
         cus_city: "Dhaka",
         cus_state: "Dhaka",

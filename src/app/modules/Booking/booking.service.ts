@@ -5,7 +5,6 @@ import { Room } from "../room/room.model";
 import { User } from "../Auth/auth.model";
 import { Slot } from "../slot/slot.model";
 import { Booking } from "./booking.model";
-import { initiatePayment } from "../payment/payment.utils";
 
 const createBookingIntoDB = async (payload: TBooking) => {
     const { date, slots, room, user } = payload
@@ -46,26 +45,19 @@ const createBookingIntoDB = async (payload: TBooking) => {
     });
 
     const totalAmount = roomRecord.pricePerSlot * slotRecords.length
-    const transactionId = `TXN-${Date.now()}`;
 
     const booking = {
-        transactionId,
         date,
         slots: slotRecords,
         room: roomRecord,
         user: userRecord,
-        totalAmount
+        totalAmount,
+        paymentStatus: "pending" 
     }
 
-    await Booking.create(booking)
+    const createdBooking = await Booking.create(booking);
 
-    for (const slot of slotRecords) {
-        await Slot.findByIdAndUpdate(slot._id, { isBooked: true });
-    }
-
-    const paymentSession = await initiatePayment(booking)
-    console.log(paymentSession);
-    return paymentSession
+    return createdBooking;
 }
 
 
@@ -73,12 +65,6 @@ const getAdminAllBookingsFromDB = async () => {
     const result = await Booking.find({ isDeleted: { $ne: true } });
     return result;
 };
-
-
-// const getAdminAllBookingsFromDB = async () => {
-//     const result = await Booking.find()
-//     return result
-// }
 
 
 const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) => {
@@ -177,4 +163,68 @@ export const BookingService = {
     
     //     const result = await Booking.find({ 'user._id': userId }).select('-user');
     //     return result
+    // }
+
+
+
+
+    // const createBookingIntoDB = async (payload: TBooking) => {
+    //     const { date, slots, room, user } = payload
+    
+    //     if (!user) {
+    //         throw new AppError(httpStatus.NOT_FOUND, "User not found")
+    //     }
+    
+    //     if (!room) {
+    //         throw new AppError(httpStatus.NOT_FOUND, "Room not found")
+    //     }
+    
+    //     const userRecord = await User.findById(user)
+    
+    //     if (!userRecord) {
+    //         throw new AppError(httpStatus.NOT_FOUND, "User not found in database");
+    //     }
+    
+    //     const roomRecord = await Room.findById(room)
+    
+    //     if (!roomRecord) {
+    //         throw new AppError(httpStatus.NOT_FOUND, "Room not found in database");
+    //     }
+    
+    //     const slotRecords = await Slot.find({ _id: { $in: slots } });
+    //     if (slotRecords.length !== slots.length) {
+    //         throw new AppError(httpStatus.NOT_FOUND, "Slots not found in the database");
+    //     }
+    
+    
+    //     const invalidSlots = slotRecords.filter(slot => !slot.room.equals(room));
+    //     if (invalidSlots.length > 0) {
+    //         throw new AppError(httpStatus.BAD_REQUEST, "Slots do not belong to this specified room");
+    //     }
+    
+    //     slotRecords.forEach(slot => {
+    //         slot.isBooked = true;
+    //     });
+    
+    //     const totalAmount = roomRecord.pricePerSlot * slotRecords.length
+    //     const transactionId = `TXN-${Date.now()}`;
+    
+    //     const booking = {
+    //         transactionId,
+    //         date,
+    //         slots: slotRecords,
+    //         room: roomRecord,
+    //         user: userRecord,
+    //         totalAmount
+    //     }
+    
+    //     await Booking.create(booking)
+    
+    //     for (const slot of slotRecords) {
+    //         await Slot.findByIdAndUpdate(slot._id, { isBooked: true });
+    //     }
+    
+    //     const paymentSession = await initiatePayment(booking)
+    //     console.log(paymentSession);
+    //     return paymentSession
     // }
