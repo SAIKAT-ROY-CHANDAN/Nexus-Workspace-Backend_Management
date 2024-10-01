@@ -52,7 +52,6 @@ const createBookingIntoDB = async (payload: TBooking) => {
         room: roomRecord,
         user: userRecord,
         totalAmount,
-        paymentStatus: "pending" 
     }
 
     const createdBooking = await Booking.create(booking);
@@ -63,6 +62,15 @@ const createBookingIntoDB = async (payload: TBooking) => {
 
 const getAdminAllBookingsFromDB = async () => {
     const result = await Booking.find({ isDeleted: { $ne: true } });
+    return result;
+};
+
+
+const getPaymentCompleteBookingsFromDB = async () => {
+    const result = await Booking.find({
+        isDeleted: { $ne: true },
+        paymentStatus: 'paid'
+    });
     return result;
 };
 
@@ -146,7 +154,8 @@ export const BookingService = {
     // getUserBookingsFromDB,
     adminUpdateBookingFromDB,
     deleteBookingFromDB,
-    confirmBookingAndRejectBookingStatusIntoDB
+    confirmBookingAndRejectBookingStatusIntoDB,
+    getPaymentCompleteBookingsFromDB
 }
 
 

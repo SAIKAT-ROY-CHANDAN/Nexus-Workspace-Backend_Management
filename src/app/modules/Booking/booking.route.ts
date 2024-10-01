@@ -17,6 +17,10 @@ router.get('/',
     BookingController.getAdminAllBookings
 )
 
+router.get('/paid',
+    BookingController.getPaidBookings
+)
+
 router.patch('/:id',
     auth('admin'),
     BookingController.updateBooking

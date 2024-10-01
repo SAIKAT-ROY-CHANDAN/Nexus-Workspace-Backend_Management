@@ -34,6 +34,26 @@ const getAdminAllBookings = catchAsync(
     }
 )
 
+const getPaidBookings = catchAsync(
+    async (req: Request, res: Response) => {
+        const result = await BookingService.getPaymentCompleteBookingsFromDB()
+
+        if (result.length === 0) {
+            res.status(404).json({
+                success: false,
+                message: 'No Data Found',
+                data: result
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                message: 'Paid bookings retrieved successfully',
+                data: result
+            })
+        }
+    }
+)
+
 
 // const getUserAllBookings = catchAsync(
 //     async (req: Request, res: Response) => {
@@ -88,5 +108,6 @@ export const BookingController = {
     // getUserAllBookings,
     updateBooking,
     deleteBooking,
-    confirmBookingAndRejectBookingStatus
+    confirmBookingAndRejectBookingStatus,
+    getPaidBookings
 }

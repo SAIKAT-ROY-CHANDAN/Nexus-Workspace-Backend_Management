@@ -44,6 +44,7 @@ const bookingSchema = new Schema({
     totalAmount: { type: Number, required: true },
     isConfirmed: { type: String, default: "unconfirmed" },
     isDeleted: { type: Boolean, default: false },
+    paymentStatus: {type: String, default: 'pending'},
     __v: { type: Number }
 });
 
