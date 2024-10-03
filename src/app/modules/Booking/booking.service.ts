@@ -94,7 +94,6 @@ const adminUpdateBookingFromDB = async (id: string, payload: Partial<TBooking>) 
         isDeleted: result.isDeleted
     };
     
-    // console.log(transformedResult);
     
     return transformedResult
 }
@@ -120,8 +119,6 @@ const deleteBookingFromDB = async (id: string) => {
         isConfirmed: result.isConfirmed,
         isDeleted: result.isDeleted
     };
-    
-    // console.log(transformedResult);
     
     return transformedResult
 }
@@ -157,24 +154,6 @@ export const BookingService = {
     confirmBookingAndRejectBookingStatusIntoDB,
     getPaymentCompleteBookingsFromDB
 }
-
-
-
-    // const getUserBookingsFromDB = async (payload: any) => {
-    //     const token = payload.split(' ')[1];
-    
-    //     const decoded = jwt.verify(
-    //         token,
-    //         config.jwt_access_secret as string
-    //     ) as JwtPayload
-    
-    //     const { userId } = decoded
-    
-    //     const result = await Booking.find({ 'user._id': userId }).select('-user');
-    //     return result
-    // }
-
-
 
 
     // const createBookingIntoDB = async (payload: TBooking) => {

@@ -3,9 +3,9 @@ import catchAsync from '../../utils/catchAsync';
 import { paymentServices } from './payment.service';
 
 export const initiatePaymentForBooking = catchAsync(async (req: Request, res: Response) => {
-    const { bookingIds } = req.body;
+    const { bookingIds, user } = req.body;
 
-    const paymentResult = await paymentServices.processPayment(bookingIds.bookingIds, bookingIds.user);
+    const paymentResult = await paymentServices.processPayment(bookingIds, user);
 
     return res.status(200).json({
         success: true,

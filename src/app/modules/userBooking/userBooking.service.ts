@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 import { Booking } from "../Booking/booking.model";
@@ -12,7 +13,7 @@ const getUserBookingsFromDB = async (payload: any) => {
 
     const { userId } = decoded
 
-    const result = await Booking.find({ 'user._id': userId }).select('-user');
+    const result = await Booking.find({ 'user._id': userId, paymentStatus: { $ne: 'paid' } }).select('-user');
     return result
 }
 

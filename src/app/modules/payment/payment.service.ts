@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import AppError from "../../errors/AppError";
 import { Booking } from "../Booking/booking.model";
 import { initiatePayment } from "./payment.utils";
+import { Slot } from "../slot/slot.model";
 
 const processPayment = async (bookingIds: string[], user: any) => {
     let totalAmount = 0;
@@ -35,6 +36,13 @@ const processPayment = async (bookingIds: string[], user: any) => {
                 paymentStatus: "paid",
                 transactionId
             });
+
+            const slotIds = booking.slots.map(slot => slot._id);
+            
+            await Slot.updateMany(
+                { _id: { $in: slotIds } },
+                { $set: { isBooked: true } }
+            );
         }
 
         return {

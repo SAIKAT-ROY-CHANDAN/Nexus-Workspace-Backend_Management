@@ -31,11 +31,6 @@ router.patch('/status/:id',
     BookingController.confirmBookingAndRejectBookingStatus
 )
 
-// router.get('/my-bookings',
-//     auth('user'),
-//     BookingController.getUserAllBookings
-// )
-
 router.delete('/:id',
     auth('admin'),
     BookingController.deleteBooking
