@@ -28,7 +28,6 @@ const processPayment = async (bookingIds: string[], user: any) => {
     const transactionId = `TXN-${Date.now()}`;
 
     const paymentSession = await initiatePayment(bookings, user, transactionId, totalAmount);
-    console.log("Payment initiated: ", paymentSession);
 
     if (paymentSession.result === 'true') {
         for (const booking of bookings) {
@@ -38,7 +37,7 @@ const processPayment = async (bookingIds: string[], user: any) => {
             });
 
             const slotIds = booking.slots.map(slot => slot._id);
-            
+
             await Slot.updateMany(
                 { _id: { $in: slotIds } },
                 { $set: { isBooked: true } }
